@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Upcoming Movies-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="BookMyTicket" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MovieListViewController" customModule="MovieWatchlist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -20,9 +20,29 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0AC-f9-vnm">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="1TI-ot-wHv"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="7uJ-zS-PBi"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="0AC-f9-vnm" secondAttribute="bottom" id="0SL-Y2-n5b"/>
+                            <constraint firstItem="0AC-f9-vnm" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="dnZ-1z-gcq"/>
+                            <constraint firstAttribute="trailing" secondItem="0AC-f9-vnm" secondAttribute="trailing" id="eCn-lW-6Q4"/>
+                            <constraint firstItem="0AC-f9-vnm" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="mS5-u9-Qzt"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="94F-SQ-VeB"/>
+                    <navigationItem key="navigationItem" title="Upcoming Movies" id="94F-SQ-VeB"/>
+                    <connections>
+                        <outlet property="tableView" destination="0AC-f9-vnm" id="wkR-hF-DnZ"/>
+                        <segue destination="0dF-wm-6Of" kind="show" id="Cvo-lJ-CvG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -45,6 +65,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OGb-rb-uW8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="135" y="37"/>
+        </scene>
+        <!--Watchlist-->
+        <scene sceneID="ohv-rD-t1e">
+            <objects>
+                <viewController storyboardIdentifier="WatchlistViewController" id="0dF-wm-6Of" customClass="WatchlistViewController" customModule="MovieWatchlist" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mOV-4N-hJ2"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Vc-ED-6HQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Le6-Iz-2i4">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dEj-a9-o9p">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="0dF-wm-6Of" id="KFX-su-bQE"/>
+                                    <outlet property="delegate" destination="0dF-wm-6Of" id="ke5-3u-gEC"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="dEj-a9-o9p" firstAttribute="leading" secondItem="Le6-Iz-2i4" secondAttribute="leading" id="IgT-wm-hTd"/>
+                            <constraint firstAttribute="trailing" secondItem="dEj-a9-o9p" secondAttribute="trailing" id="fOd-rM-23p"/>
+                            <constraint firstItem="4Vc-ED-6HQ" firstAttribute="top" secondItem="dEj-a9-o9p" secondAttribute="bottom" id="hEk-mV-tGG"/>
+                            <constraint firstItem="dEj-a9-o9p" firstAttribute="top" secondItem="Le6-Iz-2i4" secondAttribute="top" id="tZX-ed-3kH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Watchlist" id="pEg-EP-166"/>
+                    <connections>
+                        <outlet property="tableView" destination="dEj-a9-o9p" id="fCJ-PG-Ufz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4NC-xZ-Vw4" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1767" y="36"/>
         </scene>
     </scenes>
 </document>

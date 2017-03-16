@@ -11,6 +11,7 @@ import UIKit
 class Movie: NSObject {
     var name : String!
     var details : String!
+    var thumbnail : String!
     var releaseDate : Date!
-    var isFavorite : Bool!
+    var isFavorite : Bool! = false
 }

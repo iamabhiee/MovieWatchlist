@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="MovieTableViewCell" customModule="BookMyTicket" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="MovieTableViewCell" customModule="MovieWatchlist" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -22,20 +22,21 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gcr-a8-yqE">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="87.5"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nkN-fq-dHG">
-                                <rect key="frame" x="8" y="8" width="53.5" height="71.5"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nkN-fq-dHG">
+                                <rect key="frame" x="8" y="8" width="60" height="72"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="nkN-fq-dHG" secondAttribute="height" multiplier="3:4" id="TF6-QO-Lem"/>
+                                    <constraint firstAttribute="width" constant="60" id="GXn-PA-SEx"/>
+                                    <constraint firstAttribute="width" secondItem="nkN-fq-dHG" secondAttribute="height" multiplier="5:6" id="TF6-QO-Lem"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4n-WE-rFM">
-                                <rect key="frame" x="69.5" y="8" width="204.5" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movie Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4n-WE-rFM">
+                                <rect key="frame" x="76" y="8" width="198" height="22"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OVK-CK-d0X">
-                                <rect key="frame" x="69.5" y="38" width="242.5" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OVK-CK-d0X">
+                                <rect key="frame" x="76" y="60.5" width="236" height="17"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -48,19 +49,28 @@
                                 </constraints>
                                 <state key="normal" image="star_small"/>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="21.01.2011" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROs-OX-NJJ">
+                                <rect key="frame" x="75.5" y="38" width="236" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nkN-fq-dHG" firstAttribute="leading" secondItem="gcr-a8-yqE" secondAttribute="leading" constant="8" id="0Lk-lK-Q2p"/>
                             <constraint firstItem="mRn-ge-BQ5" firstAttribute="top" secondItem="gcr-a8-yqE" secondAttribute="top" constant="8" id="0jL-sH-QAe"/>
                             <constraint firstItem="mRn-ge-BQ5" firstAttribute="leading" secondItem="C4n-WE-rFM" secondAttribute="trailing" constant="8" id="852-DE-heR"/>
-                            <constraint firstItem="nkN-fq-dHG" firstAttribute="top" secondItem="gcr-a8-yqE" secondAttribute="top" constant="8" id="G1f-Ye-ddb"/>
+                            <constraint firstItem="ROs-OX-NJJ" firstAttribute="trailing" secondItem="OVK-CK-d0X" secondAttribute="trailing" id="Fln-9m-z0G"/>
                             <constraint firstItem="C4n-WE-rFM" firstAttribute="top" secondItem="gcr-a8-yqE" secondAttribute="top" constant="8" id="GAd-HI-F5b"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="OVK-CK-d0X" secondAttribute="bottom" constant="10" id="J5R-LK-qIs"/>
                             <constraint firstAttribute="trailing" secondItem="mRn-ge-BQ5" secondAttribute="trailing" constant="8" id="M1G-og-rm4"/>
                             <constraint firstItem="OVK-CK-d0X" firstAttribute="leading" secondItem="nkN-fq-dHG" secondAttribute="trailing" constant="8" id="OUI-Sp-FtZ"/>
-                            <constraint firstItem="OVK-CK-d0X" firstAttribute="top" secondItem="C4n-WE-rFM" secondAttribute="bottom" constant="8" id="Wkd-17-vUY"/>
-                            <constraint firstAttribute="bottom" secondItem="nkN-fq-dHG" secondAttribute="bottom" constant="8" id="cIw-mf-Xy2"/>
+                            <constraint firstItem="OVK-CK-d0X" firstAttribute="top" secondItem="ROs-OX-NJJ" secondAttribute="bottom" constant="8" id="UGd-pA-w1z"/>
+                            <constraint firstItem="ROs-OX-NJJ" firstAttribute="top" secondItem="C4n-WE-rFM" secondAttribute="bottom" constant="8" id="aWJ-2G-zR0"/>
+                            <constraint firstItem="ROs-OX-NJJ" firstAttribute="leading" secondItem="OVK-CK-d0X" secondAttribute="leading" id="bP2-L0-7YN"/>
                             <constraint firstAttribute="trailing" secondItem="OVK-CK-d0X" secondAttribute="trailing" constant="8" id="i6U-eA-ReK"/>
+                            <constraint firstItem="nkN-fq-dHG" firstAttribute="centerY" secondItem="gcr-a8-yqE" secondAttribute="centerY" id="mRg-jA-pgH"/>
                             <constraint firstItem="C4n-WE-rFM" firstAttribute="leading" secondItem="nkN-fq-dHG" secondAttribute="trailing" constant="8" id="xbG-SE-9eN"/>
                         </constraints>
                     </view>
@@ -72,6 +82,13 @@
                     <constraint firstItem="gcr-a8-yqE" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Znc-dX-60J"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="favoriteButton" destination="mRn-ge-BQ5" id="dUf-tf-kzs"/>
+                <outlet property="movieDetails" destination="OVK-CK-d0X" id="rvf-6M-VA5"/>
+                <outlet property="movieName" destination="C4n-WE-rFM" id="9oh-oh-g4O"/>
+                <outlet property="movieThumbnail" destination="nkN-fq-dHG" id="XgQ-dB-ta7"/>
+                <outlet property="releaseDate" destination="ROs-OX-NJJ" id="1yE-zz-fXW"/>
+            </connections>
         </tableViewCell>
     </objects>
     <resources>

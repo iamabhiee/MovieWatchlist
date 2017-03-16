@@ -1,5 +1,5 @@
 //
-//  MovieListViewController.swift
+//  WatchlistViewController.swift
 //  MovieWatchlist
 //
 //  Created by Abhishek Sheth on 15/03/17.
@@ -8,42 +8,26 @@
 
 import UIKit
 
-class MovieListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class WatchlistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView : UITableView!
     lazy var movies : [Movie] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //Bar button item
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Watchlist", style: .plain, target: self, action: #selector(actionWatchlist))
-        
+
         //Register cell
         self.tableView.register(UINib(nibName: "MovieTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "MovieTableViewCell")
         self.tableView.tableFooterView = UIView()
-
+        
         //TODO : Pupulate data from server
-        let movie1 = Movie()
-        movie1.name = "Trapped"
-        movie1.details = "A man gets stuck in an empty high rise without food, water and electricity."
-        movie1.thumbnail = "Trapped_Poater"
-        movie1.releaseDate = Date(timeIntervalSince1970: 1489708800)
-        movies.append(movie1)
-        
-        let movie2 = Movie()
-        movie2.name = "Naam Shabana"
-        movie2.details = "It's a story of Character Shabana before the film Baby."
-        movie2.thumbnail = "Naam_Shabana_Poster"
-        movie2.releaseDate = Date(timeIntervalSince1970: 1490918400)
-        movies.append(movie2)
-        
-        let movie3 = Movie()
-        movie3.name = "Baahubali 2"
-        movie3.details = "The movie which will answer Katappa ne Baahubali ko kyun maaara."
-        movie3.thumbnail = "Baahubali_the_Conclusion"
-        movie3.releaseDate = Date(timeIntervalSince1970: 1489708800)
-        movies.append(movie3)
+        let favoriteMovie = Movie()
+        favoriteMovie.name = "Baahubali 2"
+        favoriteMovie.details = "The movie which will answer Katappa ne Baahubali ko kyun maaara."
+        favoriteMovie.thumbnail = "Baahubali_the_Conclusion"
+        favoriteMovie.releaseDate = Date(timeIntervalSince1970: 1489708800)
+        favoriteMovie.isFavorite = true
+        movies.append(favoriteMovie)
         
         self.tableView.reloadData()
     }
@@ -63,7 +47,7 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
         // Pass the selected object to the new view controller.
     }
     */
-    
+
     // MARK: - TableView
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -92,7 +76,7 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
         label.font = UIFont.systemFont(ofSize: 20.0)
         label.textAlignment = .center
         label.textColor = UIColor.darkGray
-        label.text = "Sorry, There are no upcoming movies :( "
+        label.text = "Seems like you are very busy, You don't have any plans to watch movie in distant future :( "
         label.adjustsFontSizeToFitWidth = true
         return label
     }
@@ -135,15 +119,8 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
     // MARK: - IBAction
     @IBAction func actionFavorite(_ sender : UIButton?) {
         guard let tag = sender?.tag else { return }
-        let movie = self.movies[tag]
-        movie.isFavorite = !movie.isFavorite
+        self.movies.remove(at: tag)
         
         self.tableView.reloadData()
-    }
-    
-    @IBAction func actionWatchlist() {
-        if let watchlistVC = self.storyboard?.instantiateViewController(withIdentifier: "WatchlistViewController") as? WatchlistViewController {
-            self.navigationController?.pushViewController(watchlistVC, animated: true)
-        }
     }
 }
