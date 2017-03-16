@@ -9,11 +9,8 @@
 import UIKit
 import Alamofire
 import SDWebImage
-import MBProgressHUD
 
-class MovieListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
-    @IBOutlet var tableView : UITableView!
+class MovieListViewController: BaseTableViewController, UITableViewDataSource, UITableViewDelegate {
     lazy var movies : [Movie] = []
     var placeholderMessage : String? = nil
     
@@ -29,7 +26,7 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        self.showProgressView()
         Alamofire.request("http://appbirds.co/movies/API/get_movies.php", method: .get, parameters: ["":""], encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
             
             switch(response.result) {
@@ -50,20 +47,15 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
                     } else {
                         self.placeholderMessage = nil
                     }
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                    self.tableView.reloadData()
                 }
                 break
                 
             case .failure(_):
-                if let error = response.result.error {
-                    self.placeholderMessage = error.localizedDescription
-                }
-                MBProgressHUD.hide(for: self.view, animated: true)
-                self.tableView.reloadData()
+                self.handleError(error: response.result.error)
                 break
                 
             }
+            self.refreshTableView()
         }
     }
     
@@ -105,15 +97,7 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
             return nil
         }
         
-        let label = UILabel(frame: CGRect(x: 20, y: 0, width: self.view.bounds.width - 40, height: 0))
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor.clear
-        label.font = UIFont.systemFont(ofSize: 20.0)
-        label.textAlignment = .center
-        label.textColor = UIColor.darkGray
-        label.text = placeholderMessage
-        label.adjustsFontSizeToFitWidth = true
-        return label
+        return UIViewFactory.getPlaceholderView(with: placeholderMessage, parentView: tableView)
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -142,24 +126,17 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
         var params : [String : Any] = [:]
         params["id"] = Int(movie._id)
         params["is_favorite"] = (!movie.isFavorite) ? 1 : 0
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        self.showProgressView()
         Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
             switch(response.result) {
             case .success(let value):
                 print(value)
                 movie.isFavorite = !movie.isFavorite
-                self.tableView.reloadData()
-                
             case .failure(_):
-                if let error = response.result.error {
-                    let alert = UIAlertController(title: "Error!", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
+                self.handleError(error: response.result.error)
             }
             
-            MBProgressHUD.hide(for: self.view, animated: true)
-            self.tableView.reloadData()
+            self.refreshTableView()
         }
     }
     

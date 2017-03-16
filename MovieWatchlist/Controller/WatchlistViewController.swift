@@ -8,12 +8,9 @@
 
 import UIKit
 import Alamofire
-import SDWebImage
-import MBProgressHUD
 
-class WatchlistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class WatchlistViewController: BaseTableViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet var tableView : UITableView!
     lazy var movies : [Movie] = []
     var placeholderMessage : String? = nil
 
@@ -24,7 +21,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
         self.tableView.register(UINib(nibName: "MovieTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "MovieTableViewCell")
         self.tableView.tableFooterView = UIView()
         
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        self.showProgressView()
         Alamofire.request("http://appbirds.co/movies/API/get_favorite.php", method: .get, parameters: ["":""], encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
             
             switch(response.result) {
@@ -44,20 +41,16 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
                     } else {
                         self.placeholderMessage = nil
                     }
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                    self.tableView.reloadData()
                 }
                 break
                 
             case .failure(_):
-                if let error = response.result.error {
-                    self.placeholderMessage = error.localizedDescription
-                }
-                MBProgressHUD.hide(for: self.view, animated: true)
-                self.tableView.reloadData()
+                self.handleError(error: response.error)
                 break
                 
             }
+            
+            self.refreshTableView()
         }
     }
 
@@ -99,15 +92,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
             return nil
         }
         
-        let label = UILabel(frame: CGRect(x: 20, y: 0, width: self.view.bounds.width - 40, height: 0))
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor.clear
-        label.font = UIFont.systemFont(ofSize: 20.0)
-        label.textAlignment = .center
-        label.textColor = UIColor.darkGray
-        label.text = placeholderMessage
-        label.adjustsFontSizeToFitWidth = true
-        return label
+        return UIViewFactory.getPlaceholderView(with: placeholderMessage, parentView: tableView)
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -136,7 +121,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
         var params : [String : Any] = [:]
         params["id"] = Int(movie._id)
         params["is_favorite"] = 0
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        self.showProgressView()
         Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
             switch(response.result) {
             case .success(let value):
@@ -148,19 +133,12 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
                 } else {
                     self.placeholderMessage = nil
                 }
-                self.tableView.reloadData()
                 
             case .failure(_):
-                if let error = response.result.error {
-                    //Show alert
-                    let alert = UIAlertController(title: "Error!", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
+                self.handleError(error: response.result.error)
             }
             
-            MBProgressHUD.hide(for: self.view, animated: true)
-            self.tableView.reloadData()
+            self.refreshTableView()
         }
     }
     
