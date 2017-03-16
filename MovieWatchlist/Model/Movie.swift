@@ -9,6 +9,7 @@
 import UIKit
 
 class Movie: NSObject {
+    var _id : String!
     var name : String!
     var details : String!
     var thumbnail : String!

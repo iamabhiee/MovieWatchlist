@@ -7,11 +7,15 @@
 //
 
 import UIKit
+import Alamofire
+import SDWebImage
+import MBProgressHUD
 
 class WatchlistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView : UITableView!
     lazy var movies : [Movie] = []
+    var placeholderMessage : String? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,16 +24,67 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
         self.tableView.register(UINib(nibName: "MovieTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "MovieTableViewCell")
         self.tableView.tableFooterView = UIView()
         
-        //TODO : Pupulate data from server
-        let favoriteMovie = Movie()
-        favoriteMovie.name = "Baahubali 2"
-        favoriteMovie.details = "The movie which will answer Katappa ne Baahubali ko kyun maaara."
-        favoriteMovie.thumbnail = "Baahubali_the_Conclusion"
-        favoriteMovie.releaseDate = Date(timeIntervalSince1970: 1489708800)
-        favoriteMovie.isFavorite = true
-        movies.append(favoriteMovie)
-        
-        self.tableView.reloadData()
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        Alamofire.request("http://appbirds.co/movies/API/get_favorite.php", method: .get, parameters: ["":""], encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+            
+            switch(response.result) {
+            case .success(let value):
+                if let responseDictionary = value as? [String : Any] {
+                    print(responseDictionary)
+                    
+                    if let movieList = responseDictionary["data"] as? [[String : Any]] {
+                        for movieDict in movieList {
+                            let movie = Movie()
+                            
+                            if let movieId = movieDict["id"] as? String {
+                                movie._id = movieId
+                            }
+                            
+                            if let name = movieDict["name"] as? String {
+                                movie.name = name
+                            }
+                            
+                            if let desc = movieDict["desc"] as? String {
+                                movie.details = desc
+                            }
+                            
+                            if let image = movieDict["image"] as? String {
+                                movie.thumbnail = image
+                            }
+                            
+                            if let favorite = movieDict["is_favorite"] as? String {
+                                movie.isFavorite = favorite == "1"
+                            }
+                            
+                            if let date = movieDict["date"] as? String {
+                                let releaseDate = Date(timeIntervalSince1970: Double(date)!)
+                                movie.releaseDate = releaseDate
+                            }
+                            
+                            self.movies.append(movie)
+                        }
+                    }
+                    
+                    if self.movies.count == 0 {
+                        self.placeholderMessage = "Sorry, There are no movies in your watchlist :( "
+                    } else {
+                        self.placeholderMessage = nil
+                    }
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    self.tableView.reloadData()
+                }
+                break
+                
+            case .failure(_):
+                if let error = response.result.error {
+                    self.placeholderMessage = error.localizedDescription
+                }
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.tableView.reloadData()
+                break
+                
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,7 +131,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
         label.font = UIFont.systemFont(ofSize: 20.0)
         label.textAlignment = .center
         label.textColor = UIColor.darkGray
-        label.text = "Seems like you are very busy, You don't have any plans to watch movie in distant future :( "
+        label.text = placeholderMessage
         label.adjustsFontSizeToFitWidth = true
         return label
     }
@@ -98,14 +153,16 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
             let releaseDateString = dateFormatter.string(from: movie.releaseDate)
             cell.releaseDate.text = releaseDateString;
             
-            //TODO : Load Image From URL
-            cell.movieThumbnail.image = UIImage(named: movie.thumbnail)
-            
             if movie.isFavorite == true {
                 cell.favoriteButton.setImage(UIImage(named: "star_small"), for: .normal)
             } else {
                 cell.favoriteButton.setImage(UIImage(named: "star_small_outline"), for: .normal)
             }
+            
+            //Load Image From URL
+            cell.movieThumbnail.sd_showActivityIndicatorView()
+            cell.movieThumbnail.sd_setIndicatorStyle(.gray)
+            cell.movieThumbnail.sd_setImage(with: URL(string : movie.thumbnail))
             
             cell.favoriteButton.tag = indexPath.row
             cell.favoriteButton.addTarget(self, action: #selector(actionFavorite(_:)), for: .touchUpInside)
@@ -119,8 +176,42 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
     // MARK: - IBAction
     @IBAction func actionFavorite(_ sender : UIButton?) {
         guard let tag = sender?.tag else { return }
-        self.movies.remove(at: tag)
+        let movie = self.movies[tag]
         
-        self.tableView.reloadData()
+        var params : [String : Any] = [:]
+        params["id"] = Int(movie._id)
+        params["is_favorite"] = 0
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+            switch(response.result) {
+            case .success(let value):
+                print(value)
+                self.movies.remove(at: tag)
+                
+                if self.movies.count == 0 {
+                    self.placeholderMessage = "Sorry, There are no movies in your watchlist :( "
+                } else {
+                    self.placeholderMessage = nil
+                }
+                self.tableView.reloadData()
+                
+            case .failure(_):
+                if let error = response.result.error {
+                    //Show alert
+                    let alert = UIAlertController(title: "Error!", message: error.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            MBProgressHUD.hide(for: self.view, animated: true)
+            self.tableView.reloadData()
+        }
+    }
+    
+    @IBAction func actionWatchlist() {
+        if let watchlistVC = self.storyboard?.instantiateViewController(withIdentifier: "WatchlistViewController") as? WatchlistViewController {
+            self.navigationController?.pushViewController(watchlistVC, animated: true)
+        }
     }
 }

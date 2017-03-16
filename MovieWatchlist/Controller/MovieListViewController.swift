@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import Alamofire
+import SDWebImage
+import MBProgressHUD
 
 class MovieListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var tableView : UITableView!
     lazy var movies : [Movie] = []
-
+    var placeholderMessage : String? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,47 +26,88 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
         //Register cell
         self.tableView.register(UINib(nibName: "MovieTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "MovieTableViewCell")
         self.tableView.tableFooterView = UIView()
-
-        //TODO : Pupulate data from server
-        let movie1 = Movie()
-        movie1.name = "Trapped"
-        movie1.details = "A man gets stuck in an empty high rise without food, water and electricity."
-        movie1.thumbnail = "Trapped_Poater"
-        movie1.releaseDate = Date(timeIntervalSince1970: 1489708800)
-        movies.append(movie1)
-        
-        let movie2 = Movie()
-        movie2.name = "Naam Shabana"
-        movie2.details = "It's a story of Character Shabana before the film Baby."
-        movie2.thumbnail = "Naam_Shabana_Poster"
-        movie2.releaseDate = Date(timeIntervalSince1970: 1490918400)
-        movies.append(movie2)
-        
-        let movie3 = Movie()
-        movie3.name = "Baahubali 2"
-        movie3.details = "The movie which will answer Katappa ne Baahubali ko kyun maaara."
-        movie3.thumbnail = "Baahubali_the_Conclusion"
-        movie3.releaseDate = Date(timeIntervalSince1970: 1489708800)
-        movies.append(movie3)
-        
-        self.tableView.reloadData()
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        Alamofire.request("http://appbirds.co/movies/API/get_movies.php", method: .get, parameters: ["":""], encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+            
+            switch(response.result) {
+            case .success(let value):
+                if let responseDictionary = value as? [String : Any] {
+                    print(responseDictionary)
+                    
+                    if let movieList = responseDictionary["data"] as? [[String : Any]] {
+                        self.movies.removeAll()
+                        for movieDict in movieList {
+                            let movie = Movie()
+                            
+                            if let movieId = movieDict["id"] as? String {
+                                movie._id = movieId
+                            }
+                            
+                            if let name = movieDict["name"] as? String {
+                                movie.name = name
+                            }
+                            
+                            if let desc = movieDict["desc"] as? String {
+                                movie.details = desc
+                            }
+                            
+                            if let image = movieDict["image"] as? String {
+                                movie.thumbnail = image
+                            }
+                            
+                            if let favorite = movieDict["is_favorite"] as? String {
+                                movie.isFavorite = favorite == "1"
+                            }
+                            
+                            if let date = movieDict["date"] as? String {
+                                let releaseDate = Date(timeIntervalSince1970: Double(date)!)
+                                movie.releaseDate = releaseDate
+                            }
+                            
+                            self.movies.append(movie)
+                        }
+                    }
+                    
+                    if self.movies.count == 0 {
+                        self.placeholderMessage = "Sorry, There are no upcoming movies :( "
+                    } else {
+                        self.placeholderMessage = nil
+                    }
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    self.tableView.reloadData()
+                }
+                break
+                
+            case .failure(_):
+                if let error = response.result.error {
+                    self.placeholderMessage = error.localizedDescription
+                }
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.tableView.reloadData()
+                break
+                
+            }
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
     
     // MARK: - TableView
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -92,7 +137,7 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
         label.font = UIFont.systemFont(ofSize: 20.0)
         label.textAlignment = .center
         label.textColor = UIColor.darkGray
-        label.text = "Sorry, There are no upcoming movies :( "
+        label.text = placeholderMessage
         label.adjustsFontSizeToFitWidth = true
         return label
     }
@@ -114,14 +159,16 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
             let releaseDateString = dateFormatter.string(from: movie.releaseDate)
             cell.releaseDate.text = releaseDateString;
             
-            //TODO : Load Image From URL
-            cell.movieThumbnail.image = UIImage(named: movie.thumbnail)
-            
             if movie.isFavorite == true {
                 cell.favoriteButton.setImage(UIImage(named: "star_small"), for: .normal)
             } else {
                 cell.favoriteButton.setImage(UIImage(named: "star_small_outline"), for: .normal)
             }
+            
+            //Load Image From URL
+            cell.movieThumbnail.sd_showActivityIndicatorView()
+            cell.movieThumbnail.sd_setIndicatorStyle(.gray)
+            cell.movieThumbnail.sd_setImage(with: URL(string : movie.thumbnail))
             
             cell.favoriteButton.tag = indexPath.row
             cell.favoriteButton.addTarget(self, action: #selector(actionFavorite(_:)), for: .touchUpInside)
@@ -136,9 +183,29 @@ class MovieListViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func actionFavorite(_ sender : UIButton?) {
         guard let tag = sender?.tag else { return }
         let movie = self.movies[tag]
-        movie.isFavorite = !movie.isFavorite
         
-        self.tableView.reloadData()
+        var params : [String : Any] = [:]
+        params["id"] = Int(movie._id)
+        params["is_favorite"] = (!movie.isFavorite) ? 1 : 0
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+            switch(response.result) {
+            case .success(let value):
+                print(value)
+                movie.isFavorite = !movie.isFavorite
+                self.tableView.reloadData()
+                
+            case .failure(_):
+                if let error = response.result.error {
+                    let alert = UIAlertController(title: "Error!", message: error.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            MBProgressHUD.hide(for: self.view, animated: true)
+            self.tableView.reloadData()
+        }
     }
     
     @IBAction func actionWatchlist() {
