@@ -34,33 +34,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
                     
                     if let movieList = responseDictionary["data"] as? [[String : Any]] {
                         for movieDict in movieList {
-                            let movie = Movie()
-                            
-                            if let movieId = movieDict["id"] as? String {
-                                movie._id = movieId
-                            }
-                            
-                            if let name = movieDict["name"] as? String {
-                                movie.name = name
-                            }
-                            
-                            if let desc = movieDict["desc"] as? String {
-                                movie.details = desc
-                            }
-                            
-                            if let image = movieDict["image"] as? String {
-                                movie.thumbnail = image
-                            }
-                            
-                            if let favorite = movieDict["is_favorite"] as? String {
-                                movie.isFavorite = favorite == "1"
-                            }
-                            
-                            if let date = movieDict["date"] as? String {
-                                let releaseDate = Date(timeIntervalSince1970: Double(date)!)
-                                movie.releaseDate = releaseDate
-                            }
-                            
+                            let movie = Movie(with: movieDict)
                             self.movies.append(movie)
                         }
                     }
@@ -143,26 +117,7 @@ class WatchlistViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "MovieTableViewCell", for: indexPath) as? MovieTableViewCell {
             let movie = self.movies[indexPath.row]
-            
-            cell.movieName.text = movie.name
-            cell.movieDetails.text = movie.details
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
-            
-            let releaseDateString = dateFormatter.string(from: movie.releaseDate)
-            cell.releaseDate.text = releaseDateString;
-            
-            if movie.isFavorite == true {
-                cell.favoriteButton.setImage(UIImage(named: "star_small"), for: .normal)
-            } else {
-                cell.favoriteButton.setImage(UIImage(named: "star_small_outline"), for: .normal)
-            }
-            
-            //Load Image From URL
-            cell.movieThumbnail.sd_showActivityIndicatorView()
-            cell.movieThumbnail.sd_setIndicatorStyle(.gray)
-            cell.movieThumbnail.sd_setImage(with: URL(string : movie.thumbnail))
+            cell.configure(with: movie)
             
             cell.favoriteButton.tag = indexPath.row
             cell.favoriteButton.addTarget(self, action: #selector(actionFavorite(_:)), for: .touchUpInside)
