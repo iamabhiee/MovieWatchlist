@@ -12,6 +12,8 @@
 		5D07069F1E7ABD8000E15291 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D07069E1E7ABD8000E15291 /* UIImageView+Extension.swift */; };
 		5D0706A11E7ABEC500E15291 /* NSString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0706A01E7ABEC500E15291 /* NSString+Extension.swift */; };
 		5D0706A41E7AC18400E15291 /* UIViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0706A31E7AC18400E15291 /* UIViewFactory.swift */; };
+		5D0706AB1E7AD8E900E15291 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0706AA1E7AD8E900E15291 /* NetworkManager.swift */; };
+		5D0706AD1E7ADB7A00E15291 /* MovieServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0706AC1E7ADB7A00E15291 /* MovieServices.swift */; };
 		5D41FE311E7A631B00B7942E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D41FE301E7A631B00B7942E /* AppDelegate.swift */; };
 		5D41FE361E7A631B00B7942E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D41FE341E7A631B00B7942E /* Main.storyboard */; };
 		5D41FE381E7A631C00B7942E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D41FE371E7A631C00B7942E /* Assets.xcassets */; };
@@ -30,6 +32,8 @@
 		5D07069E1E7ABD8000E15291 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		5D0706A01E7ABEC500E15291 /* NSString+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Extension.swift"; sourceTree = "<group>"; };
 		5D0706A31E7AC18400E15291 /* UIViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewFactory.swift; sourceTree = "<group>"; };
+		5D0706AA1E7AD8E900E15291 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		5D0706AC1E7ADB7A00E15291 /* MovieServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieServices.swift; sourceTree = "<group>"; };
 		5D41FE2D1E7A631B00B7942E /* MovieWatchlist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieWatchlist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D41FE301E7A631B00B7942E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D41FE351E7A631B00B7942E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -61,6 +65,8 @@
 		5D0706971E7AB78D00E15291 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				5D0706A81E7AD8A000E15291 /* Managers */,
+				5D0706A91E7AD8A000E15291 /* Services */,
 				5D0706A21E7AC17300E15291 /* Factory */,
 				5D07069B1E7AB89F00E15291 /* Extensions */,
 				5D0706981E7AB78D00E15291 /* Base Classes */,
@@ -92,6 +98,22 @@
 				5D0706A31E7AC18400E15291 /* UIViewFactory.swift */,
 			);
 			path = Factory;
+			sourceTree = "<group>";
+		};
+		5D0706A81E7AD8A000E15291 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				5D0706AA1E7AD8E900E15291 /* NetworkManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		5D0706A91E7AD8A000E15291 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5D0706AC1E7ADB7A00E15291 /* MovieServices.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		5D41FE241E7A631B00B7942E = {
@@ -296,6 +318,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D0706AD1E7ADB7A00E15291 /* MovieServices.swift in Sources */,
+				5D0706AB1E7AD8E900E15291 /* NetworkManager.swift in Sources */,
 				5D0706A11E7ABEC500E15291 /* NSString+Extension.swift in Sources */,
 				5D07069A1E7AB7A900E15291 /* BaseTableViewController.swift in Sources */,
 				5D41FE4D1E7A638A00B7942E /* MovieTableViewCell.swift in Sources */,
@@ -349,6 +373,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -399,6 +424,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -428,6 +454,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EEC7C065C361CD0A7DA25271 /* Pods-MovieWatchlist.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = J377USY9HN;
 				INFOPLIST_FILE = MovieWatchlist/Info.plist;
@@ -442,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 700B6B64A3CA498D1410201C /* Pods-MovieWatchlist.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = J377USY9HN;
 				INFOPLIST_FILE = MovieWatchlist/Info.plist;

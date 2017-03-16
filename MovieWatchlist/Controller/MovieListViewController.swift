@@ -27,36 +27,20 @@ class MovieListViewController: BaseTableViewController, UITableViewDataSource, U
     
     override func viewDidAppear(_ animated: Bool) {
         self.showProgressView()
-        Alamofire.request("http://appbirds.co/movies/API/get_movies.php", method: .get, parameters: ["":""], encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+        
+        MovieServices.getMovies(success: { (movies) in
+            self.hideProgressView()
+            self.movies = movies
             
-            switch(response.result) {
-            case .success(let value):
-                if let responseDictionary = value as? [String : Any] {
-                    print(responseDictionary)
-                    
-                    if let movieList = responseDictionary["data"] as? [[String : Any]] {
-                        self.movies.removeAll()
-                        for movieDict in movieList {
-                            let movie = Movie(with: movieDict)
-                            self.movies.append(movie)
-                        }
-                    }
-                    
-                    if self.movies.count == 0 {
-                        self.placeholderMessage = "Sorry, There are no upcoming movies :( "
-                    } else {
-                        self.placeholderMessage = nil
-                    }
-                }
-                break
-                
-            case .failure(_):
-                self.handleError(error: response.result.error)
-                break
-                
+            if self.movies.count == 0 {
+                self.placeholderMessage = "Sorry, There are no upcoming movies :( "
+            } else {
+                self.placeholderMessage = nil
             }
             self.refreshTableView()
-        }
+        }, failure: { (error) in
+            self.handleError(error: error)
+            })
     }
     
     override func didReceiveMemoryWarning() {
@@ -123,21 +107,13 @@ class MovieListViewController: BaseTableViewController, UITableViewDataSource, U
         guard let tag = sender?.tag else { return }
         let movie = self.movies[tag]
         
-        var params : [String : Any] = [:]
-        params["id"] = Int(movie._id)
-        params["is_favorite"] = (!movie.isFavorite) ? 1 : 0
         self.showProgressView()
-        Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
-            switch(response.result) {
-            case .success(let value):
-                print(value)
-                movie.isFavorite = !movie.isFavorite
-            case .failure(_):
-                self.handleError(error: response.result.error)
-            }
-            
+        MovieServices.updateWatchlist(movieId: movie._id, isFavorite: !movie.isFavorite, success: {(response) in
+            movie.isFavorite = !movie.isFavorite
             self.refreshTableView()
-        }
+        }, failure: { (error) in
+            self.handleError(error: error)
+        })
     }
     
     @IBAction func actionWatchlist() {

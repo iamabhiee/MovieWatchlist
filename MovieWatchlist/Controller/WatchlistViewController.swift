@@ -118,28 +118,20 @@ class WatchlistViewController: BaseTableViewController, UITableViewDataSource, U
         guard let tag = sender?.tag else { return }
         let movie = self.movies[tag]
         
-        var params : [String : Any] = [:]
-        params["id"] = Int(movie._id)
-        params["is_favorite"] = 0
         self.showProgressView()
-        Alamofire.request("http://appbirds.co/movies/API/update_favorite.php", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
-            switch(response.result) {
-            case .success(let value):
-                print(value)
-                self.movies.remove(at: tag)
-                
-                if self.movies.count == 0 {
-                    self.placeholderMessage = "Sorry, There are no movies in your watchlist :( "
-                } else {
-                    self.placeholderMessage = nil
-                }
-                
-            case .failure(_):
-                self.handleError(error: response.result.error)
+        MovieServices.updateWatchlist(movieId: movie._id, isFavorite: false, success: {(response) in
+            self.movies.remove(at: tag)
+            
+            if self.movies.count == 0 {
+                self.placeholderMessage = "Sorry, There are no movies in your watchlist :( "
+            } else {
+                self.placeholderMessage = nil
             }
             
             self.refreshTableView()
-        }
+        }, failure: { (error) in
+            self.handleError(error: error)
+        })
     }
     
     @IBAction func actionWatchlist() {
