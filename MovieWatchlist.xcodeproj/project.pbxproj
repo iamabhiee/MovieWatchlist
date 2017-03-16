@@ -23,6 +23,8 @@
 		5D41FE4C1E7A638A00B7942E /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D41FE461E7A638A00B7942E /* Movie.swift */; };
 		5D41FE4D1E7A638A00B7942E /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D41FE481E7A638A00B7942E /* MovieTableViewCell.swift */; };
 		5D41FE4E1E7A638A00B7942E /* MovieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D41FE491E7A638A00B7942E /* MovieTableViewCell.xib */; };
+		5DEAE7AA1E7AF65200BA372E /* MovieDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE7A91E7AF65200BA372E /* MovieDataSource.swift */; };
+		5DEAE7AC1E7AF71000BA372E /* EmptyDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE7AB1E7AF71000BA372E /* EmptyDataSource.swift */; };
 		9642B6605D1CBAF133540F9D /* Pods_MovieWatchlist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E5A1FF1DFDF1283AA033C9 /* Pods_MovieWatchlist.framework */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +47,8 @@
 		5D41FE461E7A638A00B7942E /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		5D41FE481E7A638A00B7942E /* MovieTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
 		5D41FE491E7A638A00B7942E /* MovieTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieTableViewCell.xib; sourceTree = "<group>"; };
+		5DEAE7A91E7AF65200BA372E /* MovieDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDataSource.swift; sourceTree = "<group>"; };
+		5DEAE7AB1E7AF71000BA372E /* EmptyDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyDataSource.swift; sourceTree = "<group>"; };
 		68E5A1FF1DFDF1283AA033C9 /* Pods_MovieWatchlist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieWatchlist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		700B6B64A3CA498D1410201C /* Pods-MovieWatchlist.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieWatchlist.release.xcconfig"; path = "Pods/Target Support Files/Pods-MovieWatchlist/Pods-MovieWatchlist.release.xcconfig"; sourceTree = "<group>"; };
 		EEC7C065C361CD0A7DA25271 /* Pods-MovieWatchlist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieWatchlist.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MovieWatchlist/Pods-MovieWatchlist.debug.xcconfig"; sourceTree = "<group>"; };
@@ -65,6 +69,7 @@
 		5D0706971E7AB78D00E15291 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				5DEAE7A81E7AF65200BA372E /* Datasources */,
 				5D0706A81E7AD8A000E15291 /* Managers */,
 				5D0706A91E7AD8A000E15291 /* Services */,
 				5D0706A21E7AC17300E15291 /* Factory */,
@@ -174,6 +179,15 @@
 				5D41FE491E7A638A00B7942E /* MovieTableViewCell.xib */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		5DEAE7A81E7AF65200BA372E /* Datasources */ = {
+			isa = PBXGroup;
+			children = (
+				5DEAE7A91E7AF65200BA372E /* MovieDataSource.swift */,
+				5DEAE7AB1E7AF71000BA372E /* EmptyDataSource.swift */,
+			);
+			path = Datasources;
 			sourceTree = "<group>";
 		};
 		7E1763FCBAC912E36B01DFCC /* Frameworks */ = {
@@ -318,11 +332,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DEAE7AA1E7AF65200BA372E /* MovieDataSource.swift in Sources */,
 				5D0706AD1E7ADB7A00E15291 /* MovieServices.swift in Sources */,
 				5D0706AB1E7AD8E900E15291 /* NetworkManager.swift in Sources */,
 				5D0706A11E7ABEC500E15291 /* NSString+Extension.swift in Sources */,
 				5D07069A1E7AB7A900E15291 /* BaseTableViewController.swift in Sources */,
 				5D41FE4D1E7A638A00B7942E /* MovieTableViewCell.swift in Sources */,
+				5DEAE7AC1E7AF71000BA372E /* EmptyDataSource.swift in Sources */,
 				5D07069F1E7ABD8000E15291 /* UIImageView+Extension.swift in Sources */,
 				5D41FE4B1E7A638A00B7942E /* MovieListViewController.swift in Sources */,
 				5D41FE311E7A631B00B7942E /* AppDelegate.swift in Sources */,
